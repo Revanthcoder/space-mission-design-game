@@ -71,25 +71,35 @@ function PlanetModel() {
   const groupRef = useRef<Group>(null);
   const ringData = useMemo(
     () => [
-      { radius: 2.05, tube: 0.05, rotation: [Math.PI / 2.8, 0, 0] },
-      { radius: 2.3, tube: 0.032, rotation: [Math.PI / 2.1, 0.6, 0.8] },
-      { radius: 2.6, tube: 0.02, rotation: [Math.PI / 2.5, 0.4, 1.1] },
+      { radius: 2.05, tube: 0.06, rotation: [Math.PI / 2.8, 0, 0], color: "#7dd3fc" },
+      { radius: 2.3, tube: 0.04, rotation: [Math.PI / 2.1, 0.6, 0.8], color: "#67e8f9" },
+      { radius: 2.6, tube: 0.025, rotation: [Math.PI / 2.5, 0.4, 1.1], color: "#93c5fd" },
+      { radius: 2.95, tube: 0.018, rotation: [Math.PI / 1.9, 1.2, 0.2], color: "#c4b5fd" },
     ],
     [],
   );
 
   const asteroidData = useMemo(
     () =>
-      Array.from({ length: 28 }, (_, index) => {
-        const angle = (index / 28) * Math.PI * 2;
-        const radius = 2.9 + (index % 6) * 0.18;
+      Array.from({ length: 36 }, (_, index) => {
+        const angle = (index / 36) * Math.PI * 2;
+        const radius = 3.05 + (index % 7) * 0.18;
         return {
           angle,
           radius,
-          y: (index % 4) * 0.25 - 0.45,
-          scale: 0.08 + (index % 5) * 0.03,
+          y: (index % 5) * 0.28 - 0.6,
+          scale: 0.08 + (index % 4) * 0.04,
         };
       }),
+    [],
+  );
+
+  const moonData = useMemo(
+    () => [
+      { position: [2.9, 0.6, 0.8], scale: 0.18, color: "#f8fafc" },
+      { position: [-2.3, -0.9, -1.1], scale: 0.14, color: "#dbeafe" },
+      { position: [1.4, -1.7, 1.6], scale: 0.12, color: "#a5f3fc" },
+    ],
     [],
   );
 
@@ -102,28 +112,28 @@ function PlanetModel() {
 
   return (
     <group ref={groupRef}>
-      <Float speed={2.4} rotationIntensity={0.5} floatIntensity={1}>
+      <Float speed={2.1} rotationIntensity={0.8} floatIntensity={1.2}>
         <mesh castShadow receiveShadow>
           <sphereGeometry args={[1.42, 72, 72]} />
           <meshStandardMaterial
             color="#9ad7ff"
             emissive="#5ec7ff"
-            emissiveIntensity={1.4}
+            emissiveIntensity={1.7}
             roughness={0.8}
             metalness={0.35}
           />
         </mesh>
       </Float>
 
-      <mesh scale={[1.24, 1.24, 1.24]}>
+      <mesh scale={[1.28, 1.28, 1.28]}>
         <sphereGeometry args={[1.55, 72, 72]} />
-        <meshStandardMaterial color="#7dd3fc" emissive="#67e8f9" emissiveIntensity={0.5} transparent opacity={0.22} />
+        <meshStandardMaterial color="#7dd3fc" emissive="#67e8f9" emissiveIntensity={0.6} transparent opacity={0.2} />
       </mesh>
 
       {ringData.map((ring, index) => (
         <mesh key={index} rotation={ring.rotation as [number, number, number]}>
           <torusGeometry args={[ring.radius, ring.tube, 16, 180]} />
-          <meshStandardMaterial color="#7dd3fc" emissive="#67e8f9" emissiveIntensity={1.2} transparent opacity={0.82} />
+          <meshStandardMaterial color={ring.color} emissive={ring.color} emissiveIntensity={1.4} transparent opacity={0.78} />
         </mesh>
       ))}
 
@@ -139,16 +149,24 @@ function PlanetModel() {
           scale={item.scale}
         >
           <dodecahedronGeometry args={[1, 0]} />
-          <meshStandardMaterial color="#cbd5e1" roughness={0.9} metalness={0.3} />
+          <meshStandardMaterial color="#dfe7f4" roughness={0.9} metalness={0.3} />
+        </mesh>
+      ))}
+
+      {moonData.map((moon, index) => (
+        <mesh key={index} position={moon.position as [number, number, number]} castShadow>
+          <sphereGeometry args={[moon.scale, 24, 24]} />
+          <meshStandardMaterial color={moon.color} emissive={moon.color} emissiveIntensity={0.6} />
         </mesh>
       ))}
 
       <mesh position={[2.3, 0.6, 0]} castShadow>
         <sphereGeometry args={[0.24, 24, 24]} />
-        <meshStandardMaterial color="#f8fafc" emissive="#dbeafe" emissiveIntensity={0.75} />
+        <meshStandardMaterial color="#f8fafc" emissive="#dbeafe" emissiveIntensity={0.8} />
       </mesh>
 
       <SpaceStation radius={2.9} speed={0.9} angle={0.9} />
+      <SpaceStation radius={3.7} speed={0.75} angle={1.7} />
       <Satellite radius={1.95} speed={1.2} angle={0.7} color="#f8fafc" />
       <Satellite radius={2.45} speed={1.55} angle={2.1} color="#7dd3fc" />
       <Satellite radius={3.1} speed={1.9} angle={4.2} color="#a78bfa" />
