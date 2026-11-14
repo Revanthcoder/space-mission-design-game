@@ -1,0 +1,1 @@
+-- Add the application's Supabase tables and policies here.
