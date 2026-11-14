@@ -10,10 +10,17 @@ import ComponentAssemblyVisual from "../components/ComponentAssemblyVisual";
 import { componentCategories, missions, solarSystemDestinations, spacecraftComponents } from "../data/spacecraftData";
 import { calculateResources, validateMission } from "../engine/resourceCalculations";
 
-export default function SpacecraftBuilder({ onOpenMissionControl }) {
+export default function SpacecraftBuilder({ onOpenMissionControl, onLaunchDesignedMission }) {
   const [level, setLevel] = useState(1);
   const [selectedDestinationId, setSelectedDestinationId] = useState("earth");
-  const [selectedIds, setSelectedIds] = useState(["basic-frame", "medium-panel", "basic-antenna", "flight-computer"]);
+  const [selectedIds, setSelectedIds] = useState([
+    "basic-frame",
+    "medium-panel",
+    "backup-battery",
+    "basic-antenna",
+    "flight-computer",
+    "camera",
+  ]);
   const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [inspected, setInspected] = useState(null);
@@ -48,7 +55,16 @@ export default function SpacecraftBuilder({ onOpenMissionControl }) {
   const handleLaunch = () => {
     scrollTo(hangarRef);
     if (validation.valid) {
-      window.alert(`Launch sequence ready for ${selectedDestination.name}.`);
+      onLaunchDesignedMission({
+        missionTitle: mission.title,
+        destinationId: selectedDestination.id,
+        destinationName: selectedDestination.name,
+        massKg: resources.mass,
+        powerGenerationW: resources.powerGeneration,
+        totalCost: resources.totalCost,
+        batteryWh: resources.battery,
+        componentNames: selected.map((component) => component.name),
+      });
     }
   };
 
@@ -106,7 +122,7 @@ export default function SpacecraftBuilder({ onOpenMissionControl }) {
             <h3>Installed systems</h3>
             <div className="installed-list">{selected.length === 0 && <p className="muted">Select components to begin assembly.</p>}{selected.map((component) => <div className="installed-item" key={component.id}><span>{component.name}</span><button onClick={() => removeComponent(component.id)}>Remove</button></div>)}</div>
             <WarningPanel validation={validation} />
-            <button className="submit-button" disabled={!validation.valid} onClick={handleLaunch}>{validation.valid ? "SUBMIT CONFIGURATION" : "CONFIGURATION NOT READY"}</button>
+            <button className="submit-button" disabled={!validation.valid} onClick={handleLaunch}>{validation.valid ? "LAUNCH MISSION" : "CONFIGURATION NOT READY"}</button>
             {validation.valid && level < missions.length && <button className="unlock-button" onClick={unlockNextLevel}>UNLOCK NEXT MISSION →</button>}
           </section>
           <section className="builder-panel catalogue-panel">

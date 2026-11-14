@@ -9,6 +9,9 @@ import {
   advanceSimulation,
 } from "../engine/missionRules.js";
 import { MISSION_EVENTS, MISSION_STAGES } from "../data/missionCatalog.js";
+import { missions, spacecraftComponents } from "../data/spacecraftData.js";
+import { calculateResources, validateMission } from "../engine/resourceCalculations.js";
+import { createMissionDesignFromBuilder } from "../engine/builderHandoff.js";
 
 const readyDesign = {
   objectiveId: "earth-observation",
@@ -19,6 +22,70 @@ const readyDesign = {
   powerGenerationW: 190,
   budgetCredits: 110,
 };
+
+test("Level 1 budget supports a complete educational spacecraft configuration", () => {
+  const mission = missions[0];
+  const selectedIds = [
+    "basic-frame",
+    "medium-panel",
+    "backup-battery",
+    "basic-antenna",
+    "flight-computer",
+    "camera",
+    "attitude-control",
+  ];
+  const selected = selectedIds.map((id) => spacecraftComponents.find((item) => item.id === id));
+  const resources = calculateResources(selected, mission);
+
+  assert.equal(resources.totalCost, 113000);
+  assert.equal(resources.remainingBudget, 27000);
+  assert.equal(validateMission(selected, resources, mission).valid, true);
+});
+
+test("the starter spacecraft is launch-ready for the first two missions", () => {
+  const selectedIds = [
+    "basic-frame",
+    "medium-panel",
+    "backup-battery",
+    "basic-antenna",
+    "flight-computer",
+    "camera",
+  ];
+  const selected = selectedIds.map((id) => spacecraftComponents.find((item) => item.id === id));
+
+  for (const mission of missions.slice(0, 2)) {
+    const resources = calculateResources(selected, mission);
+    assert.equal(validateMission(selected, resources, mission).valid, true, mission.title);
+  }
+});
+
+test("the builder hands an Earth design into a launch-ready mission plan", () => {
+  const design = createMissionDesignFromBuilder({
+    destinationId: "earth",
+    massKg: 465,
+    powerGenerationW: 180,
+    totalCost: 94000,
+  });
+  const checks = validateMissionReadiness(design);
+
+  assert.equal(design.busMassKg, 420);
+  assert.equal(design.rocketId, "meridian");
+  assert.ok(checks.every((check) => check.passed), JSON.stringify(checks));
+});
+
+test("the builder hands a Mars design to a compatible launch vehicle", () => {
+  const design = createMissionDesignFromBuilder({
+    destinationId: "mars",
+    massKg: 465,
+    powerGenerationW: 180,
+    totalCost: 94000,
+  });
+  const checks = validateMissionReadiness(design);
+
+  assert.equal(design.objectiveId, "mars-weather");
+  assert.equal(design.rocketId, "farpoint");
+  assert.ok(checks.every((check) => check.passed), JSON.stringify(checks));
+});
 
 test("the default educational design passes all Member 3 readiness checks", () => {
   const checks = validateMissionReadiness(readyDesign);

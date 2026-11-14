@@ -17,6 +17,7 @@ import {
   rollMissionEvent,
   validateMissionReadiness,
 } from "./engine/missionRules.js";
+import { createMissionDesignFromBuilder } from "./engine/builderHandoff.js";
 import MissionVisualization from "./components/MissionVisualization.jsx";
 import "./App.css";
 import Home from "./pages/Home.jsx";
@@ -39,8 +40,10 @@ const INITIAL_DESIGN = {
 
 const RESOURCE_VALIDATOR_CONTRACT = "resourceValidator(metrics) -> [{ id, label, passed, message }]";
 
-function MissionControl({ resourceValidator, onBackToBuilder }) {
-  const [design, setDesign] = useState(INITIAL_DESIGN);
+function MissionControl({ resourceValidator, onBackToBuilder, builderDesign }) {
+  const [design, setDesign] = useState(() => (
+    builderDesign ? createMissionDesignFromBuilder(builderDesign) : INITIAL_DESIGN
+  ));
   const [view, setView] = useState("design");
   const [countdown, setCountdown] = useState(null);
   const [simulation, setSimulation] = useState(null);
@@ -167,6 +170,23 @@ function MissionControl({ resourceValidator, onBackToBuilder }) {
           <span><strong>MISSION SERIES 01</strong><small>Interactive design exercise</small></span>
         </div>
       </section>
+
+      {builderDesign && (
+        <section className="builder-handoff-card" aria-label="Imported spacecraft design">
+          <div>
+            <p className="section-kicker">SPACECRAFT DESIGN LINKED</p>
+            <h2>{builderDesign.missionTitle} · {builderDesign.destinationName}</h2>
+            <p>{builderDesign.massKg} kg · {builderDesign.powerGenerationW} W solar generation · {builderDesign.batteryWh} Wh battery</p>
+          </div>
+          <p>
+            Your validated design is preloaded into the launch workflow. Select a matching science objective,
+            review the simplified estimates, then start the countdown.
+            {!["earth", "mars"].includes(builderDesign.destinationId)
+              && ` The simulator has no dedicated ${builderDesign.destinationName} trajectory; its available paths are illustrative.`}
+          </p>
+          <small>Installed systems: {builderDesign.componentNames.join(", ")}</small>
+        </section>
+      )}
 
       <nav className="workflow-nav" aria-label="Mission workflow">
         <WorkflowStep number="01" label="DESIGN" active={view === "design"} onClick={() => setView("design")} />
@@ -621,15 +641,28 @@ function objectiveIcon(id) {
 
 export default function App({ resourceValidator }) {
   const [activeModule, setActiveModule] = useState("builder");
+  const [builderDesign, setBuilderDesign] = useState(null);
 
-  if (activeModule === "mission") {
-    return (
-      <MissionControl
-        resourceValidator={resourceValidator}
-        onBackToBuilder={() => setActiveModule("builder")}
-      />
-    );
+  function openMissionControl(design = null) {
+    setBuilderDesign(design);
+    setActiveModule("mission");
   }
 
-  return <Home onOpenMissionControl={() => setActiveModule("mission")} />;
+  return (
+    <>
+      <div hidden={activeModule !== "builder"}>
+        <Home
+          onOpenMissionControl={() => openMissionControl()}
+          onLaunchDesignedMission={openMissionControl}
+        />
+      </div>
+      {activeModule === "mission" && (
+      <MissionControl
+        resourceValidator={resourceValidator}
+        builderDesign={builderDesign}
+        onBackToBuilder={() => setActiveModule("builder")}
+      />
+      )}
+    </>
+  );
 }

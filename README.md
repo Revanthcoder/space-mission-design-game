@@ -1,6 +1,6 @@
 # Space Mission Design Game
 
-A React and Vite educational mission-design game. The spacecraft builder and Member 3 mission simulator are available from the same app: use **Mission simulator** in the builder header to enter the simulator, then **Spacecraft builder** to return. The simulator includes objective-led configuration, fictional educational launch vehicles, orbit selection, launch readiness, countdown, mission stages, random decision events, a mission report, an interactive Three.js view, and an SVG fallback. The 3D view also has decorative bird, bouncing-ball, and rotating-cube animations; these are visual accents, not mission hardware.
+A React and Vite educational mission-design game. The spacecraft builder and Member 3 mission simulator are available from the same app: use **Launch mission** on a validated design to transfer it into the prefilled launch workflow, or **Mission simulator** in the builder header to open the simulator separately; **Spacecraft builder** returns to the preserved design. Early builder missions have a ready-to-launch starter craft, and the higher mission power, battery, and reliability thresholds are tuned to remain achievable with the included components. The simulator includes objective-led configuration, fictional educational launch vehicles, orbit selection, launch readiness, countdown, mission stages, random decision events, a mission report, an interactive Three.js view, and an SVG fallback. The 3D view also has decorative bird, bouncing-ball, and rotating-cube animations; these are visual accents, not mission hardware.
 
 ## Run locally
 
@@ -34,7 +34,7 @@ npm test
 
 The experience cites NASA's *Design and Develop Science Missions* webinar, *CubeSat 101*, NASA Mission Viz, and NASA's *Build It Yourself: Satellite!* learning game. The BioNutrients-2 example's sample targets shown in the app come from the NASA webinar and are only applied to that scenario. The references and exact links are listed in `src/data/missionCatalog.js` and in the in-app source panel.
 
-Rocket names, payload capacities, prices, mission credits, power budgets, instrument values, transfer paths, mission durations, event outcomes, and scores are configurable educational assumptions, not NASA vehicle specifications or flight dynamics. The mission paths are illustrative and not to scale. The simulation does not claim to model actual NASA operations.
+Rocket names, payload capacities, prices, spacecraft-builder budget caps, mission credits, power budgets, instrument values, transfer paths, mission durations, event outcomes, and scores are configurable educational assumptions, not NASA vehicle specifications, actual mission costs, or flight dynamics. The mission paths are illustrative and not to scale. The simulation does not claim to model actual NASA operations.
 
 ## Resource-validation integration
 

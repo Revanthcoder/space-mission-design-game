@@ -69,6 +69,10 @@ button:focus-visible, input:focus-visible, a:focus-visible {
 .crew-avatar { width: 25px; height: 25px; display: inline-grid; place-items: center; border-radius: 50%; background: #1a3445; color: var(--cyan); font: 500 9px "DM Mono", monospace; }
 
 .page-intro { display: flex; align-items: end; justify-content: space-between; padding: 47px 0 38px; gap: 25px; }
+.builder-handoff-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr); gap: 10px 24px; margin: -14px 0 22px; padding: 17px 20px; border: 1px solid rgba(102,208,231,.3); border-radius: 10px; background: linear-gradient(110deg, rgba(26,64,78,.45), rgba(17,29,41,.78)); }
+.builder-handoff-card h2 { margin: 6px 0; color: #e7edf3; font: 600 15px "Space Grotesk", sans-serif; }
+.builder-handoff-card > div > p:last-child, .builder-handoff-card > p { margin: 5px 0 0; color: #aab8c5; font-size: 10px; line-height: 1.6; }
+.builder-handoff-card > small { grid-column: 1 / -1; color: #7799a8; font-size: 9px; }
 .eyebrow, .section-kicker { display: flex; align-items: center; gap: 9px; margin: 0; color: #86c8d8; font: 500 9px "DM Mono", monospace; letter-spacing: .16em; }
 .eyebrow-line { display: inline-block; width: 22px; height: 1px; background: var(--cyan-strong); }
 .page-intro h1 { margin: 15px 0 12px; font: 600 clamp(2.4rem, 5vw, 4.15rem)/1.07 "Space Grotesk", sans-serif; letter-spacing: -.055em; }
@@ -412,6 +416,8 @@ button:focus-visible, input:focus-visible, a:focus-visible {
   .topbar-right { gap: 8px; }
   .topbar-divider, .crew-label { display: none; }
   .page-intro { align-items: flex-start; padding: 35px 0 26px; }
+  .builder-handoff-card { grid-template-columns: 1fr; margin-top: -6px; padding: 14px; }
+  .builder-handoff-card > small { grid-column: auto; }
   .page-intro h1 { font-size: clamp(2.2rem, 10vw, 3.25rem); }
   .intro-copy { max-width: 95%; font-size: 11px; }
   .mission-stamp { display: none; }
