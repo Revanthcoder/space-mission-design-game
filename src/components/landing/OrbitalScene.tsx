@@ -3,6 +3,17 @@ import { Float, OrbitControls, Sparkles, Stars } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import type { Group, Mesh } from "three";
 
+const SOLAR_SYSTEM_PLANETS = [
+  { name: "Mercury", color: "#d1d5db", distance: 2.2, radius: 0.22, speed: 0.9, emissive: "#e2e8f0" },
+  { name: "Venus", color: "#f7c77d", distance: 3.1, radius: 0.28, speed: 0.72, emissive: "#f9a826" },
+  { name: "Earth", color: "#67e8f9", distance: 4.15, radius: 0.32, speed: 0.6, emissive: "#22d3ee" },
+  { name: "Mars", color: "#f97316", distance: 5.35, radius: 0.26, speed: 0.52, emissive: "#fb923c" },
+  { name: "Jupiter", color: "#fbbf24", distance: 6.8, radius: 0.46, speed: 0.38, emissive: "#f59e0b" },
+  { name: "Saturn", color: "#f3d8a0", distance: 8.4, radius: 0.42, speed: 0.28, emissive: "#fef3c7" },
+  { name: "Uranus", color: "#7dd3fc", distance: 10.1, radius: 0.35, speed: 0.22, emissive: "#a5f3fc" },
+  { name: "Neptune", color: "#60a5fa", distance: 11.8, radius: 0.34, speed: 0.18, emissive: "#93c5fd" },
+];
+
 function Satellite({ radius, speed, angle, color }: { radius: number; speed: number; angle: number; color: string }) {
   const meshRef = useRef<Mesh>(null);
 
@@ -67,7 +78,7 @@ function SpaceStation({ radius, speed, angle }: { radius: number; speed: number;
   );
 }
 
-function PlanetModel() {
+function SolarSystemModel() {
   const groupRef = useRef<Group>(null);
   const ringData = useMemo(
     () => [
@@ -81,14 +92,14 @@ function PlanetModel() {
 
   const asteroidData = useMemo(
     () =>
-      Array.from({ length: 36 }, (_, index) => {
-        const angle = (index / 36) * Math.PI * 2;
-        const radius = 3.05 + (index % 7) * 0.18;
+      Array.from({ length: 96 }, (_, index) => {
+        const angle = (index / 96) * Math.PI * 2;
+        const radius = 2.5 + (index % 13) * 0.28;
         return {
           angle,
           radius,
-          y: (index % 5) * 0.28 - 0.6,
-          scale: 0.08 + (index % 4) * 0.04,
+          y: (index % 7) * 0.24 - 0.9,
+          scale: 0.07 + (index % 4) * 0.04,
         };
       }),
     [],
@@ -105,37 +116,49 @@ function PlanetModel() {
 
   useFrame(({ clock }) => {
     if (!groupRef.current) return;
-
-    groupRef.current.rotation.y = clock.elapsedTime * 0.45;
-    groupRef.current.rotation.x = 0.7;
+    groupRef.current.rotation.y = clock.elapsedTime * 0.22;
+    groupRef.current.rotation.x = 0.75;
   });
 
   return (
     <group ref={groupRef}>
-      <Float speed={2.1} rotationIntensity={0.8} floatIntensity={1.2}>
-        <mesh castShadow receiveShadow>
-          <sphereGeometry args={[1.42, 72, 72]} />
-          <meshStandardMaterial
-            color="#9ad7ff"
-            emissive="#5ec7ff"
-            emissiveIntensity={1.7}
-            roughness={0.8}
-            metalness={0.35}
-          />
-        </mesh>
-      </Float>
+      <mesh>
+        <sphereGeometry args={[0.8, 32, 32]} />
+        <meshStandardMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={1.8} />
+      </mesh>
 
-      <mesh scale={[1.28, 1.28, 1.28]}>
-        <sphereGeometry args={[1.55, 72, 72]} />
-        <meshStandardMaterial color="#7dd3fc" emissive="#67e8f9" emissiveIntensity={0.6} transparent opacity={0.2} />
+      <mesh scale={[1.3, 1.3, 1.3]}>
+        <sphereGeometry args={[1.1, 64, 64]} />
+        <meshStandardMaterial color="#7dd3fc" emissive="#67e8f9" emissiveIntensity={0.5} transparent opacity={0.12} />
       </mesh>
 
       {ringData.map((ring, index) => (
         <mesh key={index} rotation={ring.rotation as [number, number, number]}>
           <torusGeometry args={[ring.radius, ring.tube, 16, 180]} />
-          <meshStandardMaterial color={ring.color} emissive={ring.color} emissiveIntensity={1.4} transparent opacity={0.78} />
+          <meshStandardMaterial color={ring.color} emissive={ring.color} emissiveIntensity={1.4} transparent opacity={0.7} />
         </mesh>
       ))}
+
+      {SOLAR_SYSTEM_PLANETS.map((planet, index) => {
+        const angle = index * 0.9 + 0.4;
+        const x = Math.cos(angle) * planet.distance;
+        const z = Math.sin(angle) * planet.distance;
+
+        return (
+          <group key={planet.name} position={[x, Math.sin(index * 1.2) * 0.5, z]}>
+            <mesh castShadow>
+              <sphereGeometry args={[planet.radius, 32, 32]} />
+              <meshStandardMaterial color={planet.color} emissive={planet.emissive} emissiveIntensity={0.75} />
+            </mesh>
+            {planet.name === "Saturn" && (
+              <mesh rotation={[Math.PI / 2.5, 0.4, 0.8]}>
+                <torusGeometry args={[planet.radius + 0.33, 0.08, 16, 72]} />
+                <meshStandardMaterial color="#fef3c7" emissive="#f59e0b" emissiveIntensity={0.7} transparent opacity={0.8} />
+              </mesh>
+            )}
+          </group>
+        );
+      })}
 
       {asteroidData.map((item, index) => (
         <mesh
@@ -160,11 +183,6 @@ function PlanetModel() {
         </mesh>
       ))}
 
-      <mesh position={[2.3, 0.6, 0]} castShadow>
-        <sphereGeometry args={[0.24, 24, 24]} />
-        <meshStandardMaterial color="#f8fafc" emissive="#dbeafe" emissiveIntensity={0.8} />
-      </mesh>
-
       <SpaceStation radius={2.9} speed={0.9} angle={0.9} />
       <SpaceStation radius={3.7} speed={0.75} angle={1.7} />
       <Satellite radius={1.95} speed={1.2} angle={0.7} color="#f8fafc" />
@@ -178,17 +196,21 @@ function PlanetModel() {
 export function OrbitalScene() {
   return (
     <div className="orbital-scene">
-      <Canvas camera={{ position: [0, 0, 5.7], fov: 42 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 0, 17], fov: 36 }} dpr={[1, 2]}>
         <color attach="background" args={["#020817"]} />
-        <fog attach="fog" args={["#020817", 4.5, 10]} />
-        <ambientLight intensity={0.85} />
+        <fog attach="fog" args={["#020817", 13, 28]} />
+        <ambientLight intensity={0.8} />
         <directionalLight position={[3, 2, 4]} intensity={1.6} color="#dbeafe" />
-        <pointLight position={[-2, -1, 2]} intensity={18} color="#22d3ee" />
-        <spotLight position={[0, 3, 5]} angle={0.4} penumbra={0.7} intensity={16} color="#8b5cf6" />
-        <Stars radius={25} depth={18} count={2200} factor={3} fade speed={1.2} />
-        <Sparkles count={120} scale={[6, 5, 6]} size={2.8} speed={0.7} color="#93c5fd" />
-        <PlanetModel />
-        <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.8} />
+        <pointLight position={[-8, 8, 6]} intensity={12} color="#22d3ee" />
+        <spotLight position={[0, 10, 14]} angle={0.42} penumbra={0.7} intensity={20} color="#8b5cf6" />
+        <Stars radius={60} depth={28} count={3500} factor={4} fade speed={1.2} />
+        <Sparkles count={260} scale={[18, 10, 18]} size={2.8} speed={0.8} color="#93c5fd" />
+        <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -0.8]}>
+          <torusGeometry args={[15.5, 0.03, 12, 220]} />
+          <meshBasicMaterial color="#60a5fa" transparent opacity={0.18} />
+        </mesh>
+        <SolarSystemModel />
+        <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.7} />
       </Canvas>
     </div>
   );
