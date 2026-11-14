@@ -19,6 +19,7 @@ import {
 } from "./engine/missionRules.js";
 import MissionVisualization from "./components/MissionVisualization.jsx";
 import "./App.css";
+import Home from "./pages/Home.jsx";
 
 const INITIAL_DESIGN = {
   objectiveId: "earth-observation",
@@ -38,7 +39,7 @@ const INITIAL_DESIGN = {
 
 const RESOURCE_VALIDATOR_CONTRACT = "resourceValidator(metrics) -> [{ id, label, passed, message }]";
 
-function App({ resourceValidator }) {
+function MissionControl({ resourceValidator, onBackToBuilder }) {
   const [design, setDesign] = useState(INITIAL_DESIGN);
   const [view, setView] = useState("design");
   const [countdown, setCountdown] = useState(null);
@@ -148,6 +149,7 @@ function App({ resourceValidator }) {
           <span className="learning-badge"><span /> EDUCATIONAL SIMULATION</span>
           <span className="topbar-divider" />
           <span className="crew-label"><span className="crew-avatar">MC</span> Mission team</span>
+          <button className="module-switch-button" type="button" onClick={onBackToBuilder}>SPACECRAFT BUILDER</button>
         </div>
       </header>
 
@@ -587,7 +589,7 @@ function ReferenceList() {
         </li>
       ))}
       <li><span className="reference-label">Data note</span><small>BioNutrients-2 targets are scenario-specific values from the NASA webinar. Rocket, orbit, budget, power, and simulation values are clearly labeled educational assumptions.</small></li>
-      <li><span className="reference-label">Member 2 integration</span><small>Shared validator injection contract: <code>{RESOURCE_VALIDATOR_CONTRACT}</code>. No Member 2 validation module was present in the starter repository.</small></li>
+      <li><span className="reference-label">Resource validation</span><small>The spacecraft builder uses the shared component-resource validator. This mission flow accepts an adapter using <code>{RESOURCE_VALIDATOR_CONTRACT}</code> when its metrics are available.</small></li>
     </ul>
   );
 }
@@ -617,4 +619,17 @@ function objectiveIcon(id) {
   return icons[id] || "✦";
 }
 
-export default App;
+export default function App({ resourceValidator }) {
+  const [activeModule, setActiveModule] = useState("builder");
+
+  if (activeModule === "mission") {
+    return (
+      <MissionControl
+        resourceValidator={resourceValidator}
+        onBackToBuilder={() => setActiveModule("builder")}
+      />
+    );
+  }
+
+  return <Home onOpenMissionControl={() => setActiveModule("mission")} />;
+}
