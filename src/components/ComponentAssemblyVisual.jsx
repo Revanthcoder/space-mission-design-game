@@ -11,6 +11,7 @@ const componentSymbols = {
   Radar: "◎",
   Magnetometers: "✥",
   "Attitude control": "⟳",
+  "Fuel systems": "⛽",
 };
 
 function getVisualClass(category) {

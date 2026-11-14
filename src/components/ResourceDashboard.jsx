@@ -18,7 +18,7 @@ export default function ResourceDashboard({ resources, mission }) {
       <Metric label="POWER AVAILABLE" value={`${resources.availablePower} W`} detail={`${resources.powerUse} W consumption`} warning={resources.availablePower < 0} />
       <Metric label="BATTERY CAPACITY" value={`${resources.battery} Wh`} detail={`REQUIRED ${mission.minBattery} Wh`} percent={resources.battery / mission.minBattery * 100} warning={resources.battery < mission.minBattery} />
       <Metric label="RELIABILITY" value={`${resources.reliability}%`} detail={`REQUIRED ${mission.minReliability}%`} percent={resources.reliability} warning={resources.reliability < mission.minReliability} />
-      <Metric label="FUEL ESTIMATE" value={`${resources.fuel} kg`} detail="PROPULSION RESOURCE" />
+      <Metric label="FUEL ESTIMATE" value={`${resources.fuel} kg`} detail={`TARGET ${mission.fuelEstimate} kg`} warning={resources.fuel < mission.fuelEstimate} />
     </section>
   );
 }

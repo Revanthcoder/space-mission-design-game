@@ -29,6 +29,7 @@ export function validateMission(selectedComponents, resources, mission) {
     { key: "budget", label: "Budget limit", ok: resources.totalCost <= mission.maxBudget, detail: `$${Math.max(0, resources.remainingBudget).toLocaleString()} remaining` },
     { key: "power", label: "Power generation", ok: resources.powerGeneration >= mission.minPower && resources.availablePower >= 0, detail: `${resources.availablePower} W available` },
     { key: "battery", label: "Battery capacity", ok: resources.battery >= mission.minBattery, detail: `${resources.battery} / ${mission.minBattery} Wh` },
+    { key: "fuel", label: "Propulsion fuel", ok: resources.fuel >= mission.fuelEstimate, detail: `${resources.fuel} / ${mission.fuelEstimate} kg` },
     { key: "reliability", label: "Reliability target", ok: resources.reliability >= mission.minReliability, detail: `${resources.reliability}% / ${mission.minReliability}%` },
     { key: "components", label: "Required systems", ok: missingCategories.length === 0, detail: missingCategories.length ? `${missingCategories.length} category missing` : "Complete" },
   ];

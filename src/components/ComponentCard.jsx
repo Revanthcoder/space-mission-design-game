@@ -1,7 +1,7 @@
 const symbols = {
   Structure: "▣", "Solar panels": "☀", Batteries: "◉", Communication: "⌁",
   Computers: "⌘", Cameras: "◌", Spectrometers: "◇", Radar: "◎",
-  Magnetometers: "✥", "Attitude control": "⟳",
+  Magnetometers: "✥", "Attitude control": "⟳", "Fuel systems": "⛽",
 };
 
 export default function ComponentCard({ component, installed, onAdd, onRemove, onInspect }) {
