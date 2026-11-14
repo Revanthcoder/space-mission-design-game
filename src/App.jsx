@@ -19,7 +19,7 @@ import {
 } from "./engine/missionRules.js";
 import { createMissionDesignFromBuilder } from "./engine/builderHandoff.js";
 import MissionVisualization from "./components/MissionVisualization.jsx";
-import "./App.css";
+import "./MissionControl.css";
 import Home from "./pages/Home.jsx";
 
 const INITIAL_DESIGN = {
