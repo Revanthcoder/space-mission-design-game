@@ -1,12 +1,25 @@
-:root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+﻿:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #e2e8f0;
   background: #020817;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --page: #080e17;
+  --panel: #101923;
+  --panel-raised: #131f2c;
+  --panel-deep: #0c151f;
+  --line: #233241;
+  --line-soft: rgba(159, 186, 206, 0.13);
+  --text: #e8eef5;
+  --muted: #8d9cad;
+  --faint: #627285;
+  --cyan: #66d0e7;
+  --cyan-strong: #38b8d5;
+  --green: #64d5a4;
+  --amber: #ffbf70;
+  --red: #ff817d;
 }
 
 * {
@@ -24,6 +37,28 @@ body {
   background:
     radial-gradient(circle at top, rgba(34, 211, 238, 0.18), transparent 24%),
     linear-gradient(180deg, #020817 0%, #050b16 100%);
+  color: var(--text);
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease,
+    box-shadow 180ms ease, transform 180ms ease;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
 }
 
 #root {
