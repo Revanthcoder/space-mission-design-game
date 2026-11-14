@@ -12,7 +12,7 @@ import LaunchSequence from "../components/LaunchSequence";
 import { componentCategories, missions, solarSystemDestinations, spacecraftComponents } from "../data/spacecraftData";
 import { calculateResources, validateMission } from "../engine/resourceCalculations";
 
-export default function SpacecraftBuilder() {
+export default function SpacecraftBuilder({ onOpenMissionControl, onLaunchDesignedMission }) {
   const [level, setLevel] = useState(1);
   const [selectedDestinationId, setSelectedDestinationId] = useState("mars");
   const [selectedIds, setSelectedIds] = useState(["basic-frame", "medium-panel", "basic-antenna", "flight-computer"]);
@@ -69,6 +69,16 @@ export default function SpacecraftBuilder() {
     scrollTo(hangarRef);
     if (validation.valid) {
       setLaunchPhase("countdown");
+      onLaunchDesignedMission?.({
+        missionTitle: mission.title,
+        destinationId: selectedDestination.id,
+        destinationName: selectedDestination.name,
+        massKg: resources.mass,
+        powerGenerationW: resources.powerGeneration,
+        totalCost: resources.totalCost,
+        batteryWh: resources.battery,
+        componentNames: selected.map((component) => component.name),
+      });
     } else {
       setLaunchPhase(null);
     }
@@ -82,6 +92,7 @@ export default function SpacecraftBuilder() {
         onWorlds={() => scrollTo(worldsRef)}
         onHangar={() => scrollTo(hangarRef)}
         onLaunch={handleLaunch}
+        onOpenMissionControl={onOpenMissionControl}
       />
       <main className="designer-main">
         <MissionSelection missions={missions} level={level} unlockedLevel={missions.length} onSelect={(nextLevel) => { setLevel(nextLevel); setLaunchPhase(null); }} sectionRef={missionProgressRef} />

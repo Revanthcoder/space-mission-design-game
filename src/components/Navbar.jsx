@@ -1,4 +1,4 @@
-export default function Navbar({ onReset, onMissions, onWorlds, onHangar, onLaunch }) {
+export default function Navbar({ onReset, onMissions, onWorlds, onHangar, onLaunch, onOpenMissionControl }) {
   return (
     <header className="topbar">
       <div className="brand">
@@ -11,7 +11,7 @@ export default function Navbar({ onReset, onMissions, onWorlds, onHangar, onLaun
         <button type="button" className="hangar-nav-active" onClick={onHangar}>HANGAR</button>
         <button type="button" onClick={onLaunch}>LAUNCH</button>
       </nav>
-      <div className="system-status"><span className="online-dot" /> SYSTEMS ONLINE <button className="secondary-button" onClick={onReset}>Reset craft</button></div>
+      <div className="system-status"><span className="online-dot" /> SYSTEMS ONLINE <button className="secondary-button" onClick={onReset}>Reset craft</button><button className="secondary-button" onClick={onOpenMissionControl}>Mission simulator</button></div>
     </header>
   );
 }
