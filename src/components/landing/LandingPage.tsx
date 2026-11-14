@@ -120,6 +120,14 @@ function LandingPage() {
                 <Play className="h-4 w-4" />
                 Explore Missions
               </Link>
+
+              <Link
+                to="/worlds"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-violet-400/30 bg-violet-500/10 px-6 py-3 text-sm font-semibold text-violet-100 backdrop-blur-sm transition hover:border-violet-300 hover:bg-violet-500/20"
+              >
+                <Orbit className="h-4 w-4" />
+                Open World Atlas
+              </Link>
             </div>
 
             <div className="mt-10 flex flex-wrap gap-6 text-sm text-slate-300">

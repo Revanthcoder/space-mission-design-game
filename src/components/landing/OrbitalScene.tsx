@@ -193,9 +193,9 @@ function SolarSystemModel() {
   );
 }
 
-export function OrbitalScene() {
+export function OrbitalScene({ className = "" }: { className?: string }) {
   return (
-    <div className="orbital-scene">
+    <div className={['orbital-scene', className].filter(Boolean).join(' ')}>
       <Canvas camera={{ position: [0, 0, 17], fov: 36 }} dpr={[1, 2]}>
         <color attach="background" args={["#020817"]} />
         <fog attach="fog" args={["#020817", 13, 28]} />
