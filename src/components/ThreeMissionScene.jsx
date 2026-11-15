@@ -272,7 +272,7 @@ function makeAsteroidField() {
 }
 
 function createTrajectory(orbit) {
-  if (orbit?.path === "moon" || orbit?.path === "mars") {
+  if (orbit?.path === "moon" || orbit?.path === "mars" || orbit?.path === "planetary") {
     const start = new THREE.Vector3(-2.5, 0, 0);
     const end = new THREE.Vector3(2.55, 0.08, 0);
     const curve = new THREE.CubicBezierCurve3(
@@ -322,7 +322,7 @@ export default function ThreeMissionScene({ orbit, progress, onUnavailable }) {
     renderer.domElement.setAttribute("role", "img");
     renderer.domElement.setAttribute(
       "aria-label",
-      `${orbit?.name || "Selected orbit"} mission view with a detailed spacecraft, orbiting outpost, asteroid field, and layered planetary environment. Drag to rotate and scroll to zoom.`,
+      `${orbit?.name || "Selected orbit"} mission view${orbit?.destinationName ? ` to ${orbit.destinationName}` : ""} with a detailed spacecraft, orbiting outpost, asteroid field, and layered planetary environment. Drag to rotate and scroll to zoom.`,
     );
     mount.appendChild(renderer.domElement);
 
@@ -437,14 +437,24 @@ export default function ThreeMissionScene({ orbit, progress, onUnavailable }) {
     scene.add(earthGroup);
 
     let destination;
-    if (orbit?.path === "moon" || orbit?.path === "mars") {
+    if (orbit?.path === "moon" || orbit?.path === "mars" || orbit?.path === "planetary") {
       const isMars = orbit.path === "mars";
+      const isMoon = orbit.path === "moon";
+      const destinationColors = {
+        mercury: "#d68d67",
+        venus: "#e5b35e",
+        jupiter: "#d99c73",
+        saturn: "#d8c28c",
+        uranus: "#75cbd0",
+        neptune: "#557ee0",
+      };
+      const destinationColor = destinationColors[orbit.destinationId] || "#b8bec9";
       destination = new THREE.Group();
 
       const body = new THREE.Mesh(
-        new THREE.SphereGeometry(isMars ? 0.52 : 0.38, 32, 24),
+        new THREE.SphereGeometry(isMars ? 0.52 : isMoon ? 0.38 : 0.48, 32, 24),
         new THREE.MeshStandardMaterial({
-          color: isMars ? "#c76d4a" : "#b8bec9",
+          color: isMars ? "#c76d4a" : isMoon ? "#b8bec9" : destinationColor,
           roughness: 1,
           metalness: 0,
         }),
@@ -452,8 +462,8 @@ export default function ThreeMissionScene({ orbit, progress, onUnavailable }) {
       destination.add(body);
 
       const accentRing = new THREE.Mesh(
-        new THREE.TorusGeometry(isMars ? 0.76 : 0.58, 0.04, 14, 80),
-        new THREE.MeshBasicMaterial({ color: isMars ? "#f5b087" : "#d5ecff", transparent: true, opacity: 0.55 }),
+        new THREE.TorusGeometry(isMars ? 0.76 : isMoon ? 0.58 : 0.7, 0.04, 14, 80),
+        new THREE.MeshBasicMaterial({ color: isMars ? "#f5b087" : isMoon ? "#d5ecff" : destinationColor, transparent: true, opacity: 0.55 }),
       );
       accentRing.rotation.x = Math.PI / 2.3;
       destination.add(accentRing);

@@ -8,6 +8,7 @@ import {
   ORBITS,
   ROCKETS,
 } from "../data/missionCatalog.js";
+import { calculateMissionScore } from "./scoring.js";
 
 const BUS_COST_CREDITS = 18;
 const BUS_POWER_LOAD_W = 32;
@@ -189,7 +190,7 @@ export function validateMissionReadiness(design, resourceValidator) {
 }
 
 export function createSimulationState() {
-  return {
+  const state = {
     stageIndex: 0,
     progress: 0,
     powerPercent: 100,
@@ -200,7 +201,9 @@ export function createSimulationState() {
     instrumentOperational: true,
     eventsSeen: [],
     decisionLog: [],
+    telemetryHistory: [],
   };
+  return { ...state, telemetryHistory: [createTelemetryPoint(state)] };
 }
 
 export function advanceSimulation(state) {
@@ -208,7 +211,7 @@ export function advanceSimulation(state) {
   const nextStageIndex = state.stageIndex + 1;
   const effect = STAGE_EFFECTS[nextStageIndex];
 
-  return {
+  const nextState = {
     ...state,
     stageIndex: nextStageIndex,
     progress: Math.round((nextStageIndex / (MISSION_STAGES.length - 1)) * 100),
@@ -217,6 +220,10 @@ export function advanceSimulation(state) {
     scienceScore: clamp(state.scienceScore + effect.science, 0, 100),
     missionDays: Math.round((state.missionDays + effect.missionDays) * 10) / 10,
     communication: nextStageIndex === 4 ? "Downlink in progress" : state.communication,
+  };
+  return {
+    ...nextState,
+    telemetryHistory: [...(state.telemetryHistory || []), createTelemetryPoint(nextState)],
   };
 }
 
@@ -234,7 +241,7 @@ export function applyMissionEventChoice(state, event, choiceId) {
   }
 
   const effect = choice.effect;
-  return {
+  const nextState = {
     ...state,
     powerPercent: clamp(state.powerPercent + (effect.powerDelta || 0), 0, 100),
     dataCollectedGb: Math.max(0, state.dataCollectedGb + (effect.dataDelta || 0)),
@@ -245,19 +252,32 @@ export function applyMissionEventChoice(state, event, choiceId) {
     eventsSeen: state.eventsSeen.includes(event.id) ? state.eventsSeen : [...state.eventsSeen, event.id],
     decisionLog: [...state.decisionLog, { event: event.title, choice: choice.label, effect }],
   };
+  return {
+    ...nextState,
+    telemetryHistory: [
+      ...(state.telemetryHistory || []),
+      createTelemetryPoint(nextState, event.title),
+    ],
+  };
 }
 
-export function calculateMissionResult(state) {
-  const objectiveAchieved = state.powerPercent > 0
-    && state.dataCollectedGb > 0
-    && state.scienceScore >= 30;
+export function calculateMissionResult(state, metrics, objective) {
+  if (!state || !metrics) {
+    throw new TypeError("Mission state and calculated design metrics are required to score a mission.");
+  }
+  return calculateMissionScore({ state, metrics, objective });
+}
+
+function createTelemetryPoint(state, event = "") {
   return {
-    objectiveAchieved,
-    score: Math.round(
-      state.scienceScore * 0.6
-      + Math.min(state.dataCollectedGb, 100) * 0.25
-      + state.powerPercent * 0.15,
-    ),
+    stageIndex: state.stageIndex,
+    progress: state.progress,
+    missionDays: state.missionDays,
+    powerPercent: state.powerPercent,
+    dataCollectedGb: state.dataCollectedGb,
+    scienceScore: state.scienceScore,
+    communication: state.communication,
+    event,
   };
 }
 

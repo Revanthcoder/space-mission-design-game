@@ -15,9 +15,23 @@ function pointOnCubicPath(progress, start, controlA, controlB, end) {
   };
 }
 
+const destinationColors = {
+  mercury: "#d68d67",
+  venus: "#e5b35e",
+  jupiter: "#d99c73",
+  saturn: "#d8c28c",
+  uranus: "#75cbd0",
+  neptune: "#557ee0",
+};
+
 export default function MissionVisualizationFallback({ orbit, progress, objective }) {
-  const isTransfer = orbit?.path === "moon" || orbit?.path === "mars";
-  const destination = orbit?.path === "mars" ? "MARS" : orbit?.path === "moon" ? "MOON" : "EARTH";
+  const isTransfer = orbit?.path === "moon" || orbit?.path === "mars" || orbit?.path === "planetary";
+  const destination = orbit?.path === "planetary"
+    ? (orbit.destinationName || "Selected planet").toUpperCase()
+    : orbit?.path === "mars" ? "MARS" : orbit?.path === "moon" ? "MOON" : "EARTH";
+  const destinationFill = orbit?.path === "planetary"
+    ? destinationColors[orbit.destinationId] || "url(#moon-shade)"
+    : destination === "MARS" ? "url(#mars-shade)" : "url(#moon-shade)";
   const spacecraft = useMemo(() => {
     if (isTransfer) {
       return pointOnCubicPath(progress, { x: 104, y: 174 }, { x: 210, y: 30 }, { x: 384, y: 306 }, { x: 506, y: 174 });
@@ -91,7 +105,7 @@ export default function MissionVisualizationFallback({ orbit, progress, objectiv
                 <path d="M85 161l12-9 9 2 4 9-6 7 3 8-11 7-5-9-9-4zM113 188l10-4 9 7-4 10-12 1-5-8z" fill="#70c69a" opacity=".8" />
               </g>
               <g>
-                <circle cx="506" cy="174" r="29" fill={destination === "MARS" ? "url(#mars-shade)" : "url(#moon-shade)"} />
+                <circle cx="506" cy="174" r="29" fill={destinationFill} />
                 <circle cx="497" cy="164" r="5" fill="#fff" opacity=".08" />
                 <circle cx="515" cy="181" r="7" fill="#071321" opacity=".13" />
               </g>

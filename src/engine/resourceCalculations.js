@@ -1,8 +1,18 @@
-export function calculateResources(selectedComponents, mission) {
+export function calculateResources(selectedComponents, mission, destination) {
   const count = selectedComponents.length || 1;
   const totalCost = selectedComponents.reduce((sum, item) => sum + item.cost, 0);
   const totalPowerUse = selectedComponents.reduce((sum, item) => sum + item.powerUse, 0);
-  const totalPowerGeneration = selectedComponents.reduce((sum, item) => sum + item.powerGeneration, 0);
+  const solarDistanceAu = destination?.solarDistanceAu || 1;
+  const solarPowerScale = 1 / (solarDistanceAu * solarDistanceAu);
+  const solarPowerGeneration = Math.round(
+    selectedComponents
+      .filter((item) => item.category === "Solar panels")
+      .reduce((sum, item) => sum + item.powerGeneration, 0) * solarPowerScale,
+  );
+  const radioisotopePowerGeneration = selectedComponents
+    .filter((item) => item.category === "Radioisotope power systems")
+    .reduce((sum, item) => sum + item.powerGeneration, 0);
+  const totalPowerGeneration = solarPowerGeneration + radioisotopePowerGeneration;
 
   return {
     mass: selectedComponents.reduce((sum, item) => sum + item.mass, 0),
@@ -10,6 +20,8 @@ export function calculateResources(selectedComponents, mission) {
     remainingBudget: mission.maxBudget - totalCost,
     battery: selectedComponents.reduce((sum, item) => sum + (item.battery || 0), 0),
     powerGeneration: totalPowerGeneration,
+    solarPowerGeneration,
+    radioisotopePowerGeneration,
     powerUse: totalPowerUse,
     availablePower: totalPowerGeneration - totalPowerUse,
     fuel: selectedComponents.reduce((sum, item) => sum + (item.fuel || 0), 0),

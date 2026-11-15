@@ -1,5 +1,29 @@
 export const NASA_REFERENCES = [
   {
+    name: "Planetary Fact Sheet",
+    organization: "NASA / NSSDC",
+    url: "https://nssdc.gsfc.nasa.gov/planetary/factsheet/",
+    use: "Reference gravity, atmosphere, orbital period, and average Sun distance.",
+  },
+  {
+    name: "Moon Facts",
+    organization: "NASA Science",
+    url: "https://science.nasa.gov/moon/facts/",
+    use: "Reference lunar environment and orbital context.",
+  },
+  {
+    name: "Radioisotope Power Systems",
+    organization: "NASA Science",
+    url: "https://science.nasa.gov/planetary-science/programs/radioisotope-power-systems/",
+    use: "Reference for spacecraft power in distant, low-sunlight environments.",
+  },
+  {
+    name: "Small Spacecraft Thermal Control",
+    organization: "NASA Small Spacecraft Systems Virtual Institute",
+    url: "https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/",
+    use: "Reference for thermal-management approaches in spacecraft design.",
+  },
+  {
     name: "Design and Develop Science Missions",
     organization: "NASA Systems Engineering Webinar, March 2025",
     url: "https://www.nasa.gov/wp-content/uploads/2025/04/250323-design-and-develop-science-mission.pdf",
@@ -61,6 +85,15 @@ export const OBJECTIVES = [
     orbitIds: ["mars-transfer"],
     missionTypes: ["Mars exploration", "Planetary science"],
     recommendedInstrumentIds: ["mars-camera", "radiation-monitor"],
+  },
+  {
+    id: "planetary-survey",
+    name: "Survey a planetary destination",
+    category: "Planetary science",
+    description: "Collect contextual imagery and radiation data around a selected planet.",
+    orbitIds: ["planetary-transfer"],
+    missionTypes: ["Planetary science"],
+    recommendedInstrumentIds: ["planetary-camera", "radiation-monitor"],
   },
   {
     id: "bionutrients",
@@ -136,6 +169,16 @@ export const INSTRUMENTS = [
     objectives: ["mars-weather"],
   },
   {
+    id: "planetary-camera",
+    name: "Planetary context camera",
+    description: "Collects illustrative image data for a selected planetary destination.",
+    massKg: 28,
+    powerW: 54,
+    costCredits: 17,
+    dataPerDayGb: 9,
+    objectives: ["planetary-survey"],
+  },
+  {
     id: "radiation-monitor",
     name: "Radiation monitor",
     description: "Tracks a simplified radiation exposure indicator.",
@@ -143,7 +186,7 @@ export const INSTRUMENTS = [
     powerW: 16,
     costCredits: 8,
     dataPerDayGb: 2,
-    objectives: ["lunar-survey", "mars-weather"],
+    objectives: ["lunar-survey", "mars-weather", "planetary-survey"],
   },
   {
     id: "bio-lab",
@@ -184,7 +227,7 @@ export const ROCKETS = [
     className: "Heavy launcher",
     payloadCapacityKg: 6500,
     costCredits: 82,
-    orbitIds: ["leo", "polar", "geo", "lunar-transfer", "mars-transfer"],
+    orbitIds: ["leo", "polar", "geo", "lunar-transfer", "mars-transfer", "planetary-transfer"],
     missionTypes: ["Earth observation", "Heliophysics", "Lunar exploration", "Mars exploration", "Planetary science", "ISS research"],
     description: "A high-capacity educational option for deep-space mission concepts.",
   },
@@ -245,6 +288,17 @@ export const ORBITS = [
     communications: "Long communication delays and limited data rates are part of the scenario.",
     duration: "The simplified scenario represents a months-long transfer.",
     path: "mars",
+  },
+  {
+    id: "planetary-transfer",
+    name: "Illustrative planetary transfer",
+    altitude: "Interplanetary",
+    description: "An illustrative transfer from Earth toward the selected planet; not a calculated trajectory.",
+    suitability: "Educational planetary science and deep-space technology concepts.",
+    coverage: "Local observations near the selected destination.",
+    communications: "Long communication delays and limited data rates are part of the scenario.",
+    duration: "The simplified scenario represents an interplanetary transfer.",
+    path: "planetary",
   },
 ];
 

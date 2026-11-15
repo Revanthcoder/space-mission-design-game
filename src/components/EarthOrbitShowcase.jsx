@@ -7,17 +7,27 @@ const orbit = {
   longitudeAscendingNode: -61.41017,
 };
 
+const solarSystemUrl = "https://eyes.nasa.gov/apps/solar-system/#/home";
+
 export default function EarthOrbitShowcase() {
   return (
     <section className="earth-orbit-showcase builder-panel" aria-label="Earth orbital operations">
-      <div className="earth-nasa-embed">
+      <div className="earth-orbit-visual" aria-label="NASA Eyes on the Solar System interactive 3D visualization">
         <iframe
-          title="NASA Eyes on the Solar System interactive Earth"
-          src="https://eyes.nasa.gov/apps/solar-system/#/earth?embed=true"
+          title="NASA Eyes on the Solar System"
+          src={solarSystemUrl}
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
           allow="fullscreen"
-          loading="eager"
-          referrerPolicy="no-referrer"
         />
+        <a
+          className="earth-orbit-open-link"
+          href={solarSystemUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          OPEN NASA EYES ↗
+        </a>
       </div>
       <div className="orbit-telemetry">
         <span><b>SEMIMAJOR AXIS</b>{orbit.semimajorAxis}</span>

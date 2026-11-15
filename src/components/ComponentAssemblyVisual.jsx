@@ -12,6 +12,8 @@ const componentSymbols = {
   Magnetometers: "✥",
   "Attitude control": "⟳",
   "Fuel systems": "⛽",
+  "Thermal control": "▤",
+  "Radioisotope power systems": "☢",
 };
 
 function getVisualClass(category) {

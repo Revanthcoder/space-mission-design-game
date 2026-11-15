@@ -1,0 +1,35 @@
+ Relevant files for the launch interface flow
+
+Project root: space-mission-design-game
+
+1. src/components/mission/MissionLaunchPage.tsx
+   Main launch control screen for mission launch setup.
+   Includes countdown, mission details, readiness checklist, metrics, and launch confirmation CTA.
+
+2. src/components/mission/MissionDetailPage.tsx
+   Mission detail screen that leads into launch.
+   Contains mission summary, timeline, status panels, and the “Launch mission” button.
+
+3. src/components/mission/MissionSelectionPage.tsx
+   Mission selection screen where users choose a mission before viewing details.
+
+4. src/app/routes.tsx
+   App routing definitions for mission pages, including the launch route and results route.
+
+5. src/components/LaunchSequence.jsx
+   Launch state component for countdown / launch / complete sequence UI.
+
+6. src/components/MissionVisualizationFallback.jsx
+   Fallback visualization of spacecraft movement and mission path.
+
+7. src/App.tsx
+   Root app wrapper mounting the application and routes.
+
+8. src/components/results/MissionResultsPage.tsx
+   Results page reached after confirming launch.
+
+9. src/data/missions.ts
+   Mission metadata used to populate mission details and launch screen content.
+
+10. src/components/landing/LandingPage.tsx
+   Landing page entry point into the broader app experience.

@@ -1,0 +1,470 @@
+SPACE MISSION DESIGN GAME
+PLANET AND MISSION PATH CHECK RANGES
+Generated from the current game rules: 2026-11-15
+
+JUDGE-READY PROJECT SUMMARY
+Mission Control is an educational spacecraft-design game that turns mission
+engineering into a visible chain of decisions. A player selects a destination,
+chooses a compatible mission path, assembles a spacecraft, passes readiness
+checks, runs an illustrative flight, responds to events, and receives a
+transparent mission report.
+
+The central learning idea:
+
+    EVERY NUMBER IS A DECISION
+    EVERY RESULT HAS AN EXPLANATION
+
+The game is designed for a short demonstration, classroom discussion, or
+science-outreach activity. It is browser-based, has no account requirement,
+and shows both the engineering trade-offs and the limits of the model.
+
+WHY THIS IS A STRONG HACKATHON ENTRY
+- Real planetary facts and imagery are used as the context for each choice.
+- The game turns abstract systems engineering into an interactive experience.
+- The destination-first workflow makes the consequence of a choice visible.
+- The scoring engine is transparent: judges can see why points were awarded.
+- The report is exportable and useful as evidence of learning, not only a
+  final win/lose screen.
+- The model labels simplified estimates instead of presenting game values as
+  certified NASA flight data.
+
+ONE-SCREEN GAMEPLAY FLOW
+
+    +------------------+
+    | ABOUT / BRIEFING |
+    +--------+---------+
+             |
+             v
+    +---------------------+
+    | SELECT DESTINATION  |
+    | planet facts/images |
+    +----------+----------+
+               |
+               v
+    +---------------------+
+    | SELECT MISSION PATH |
+    | compatible objective|
+    +----------+----------+
+               |
+               v
+    +---------------------+
+    | ASSEMBLE SPACECRAFT|
+    | mass / power / cost |
+    +----------+----------+
+               |
+               v
+    +---------------------+
+    | READINESS REVIEW    |
+    | pass or revise      |
+    +----------+----------+
+               |
+               v
+    +---------------------+
+    | LAUNCH + SIMULATE   |
+    | events + telemetry  |
+    +----------+----------+
+               |
+               v
+    +---------------------+
+    | REPORT + SCORE      |
+    | explain + improve   |
+    +---------------------+
+
+DESTINATION-TO-PATH DECISION MAP
+
+    EARTH       ---> PATH 01 Earth observation
+                 ---> PATH 02 Weather monitoring
+    MOON        ---> PATH 03 Lunar communications
+                 ---> PATH 04 Moon exploration
+    MERCURY     ---> PATH 05 Inner planet orbiter
+    VENUS       ---> PATH 05 Inner planet orbiter
+    MARS        ---> PATH 05 Inner planet orbiter
+    JUPITER     ---> PATH 07 Outer planet survey
+    SATURN      ---> PATH 07 Outer planet survey
+    URANUS      ---> PATH 08 Ice giant probe
+    NEPTUNE     ---> PATH 08 Ice giant probe
+    ASTEROID    ---> PATH 06 Asteroid exploration
+
+    PATH 09 is retained as an internal interstellar concept and is not
+    offered by the current planet destination selector.
+
+HOW TO USE THIS FILE
+Use the ACCEPTANCE CHECKS to decide whether a spacecraft build passes its
+mission path. The VALID-BUILD RANGES show the minimum and maximum values
+observed by checking every unique combination of the game's 18 components
+that passes all mission checks for that destination.
+
+Each metric range is reported independently. The minimum or maximum for one
+metric may come from a different spacecraft build than another metric's
+endpoint. Values inside every individual range do not guarantee that a build
+passes: all acceptance checks and required system categories must pass
+together.
+
+UNITS AND RULES
+- Mass: kg
+- Cost: game credits (not real-world dollars)
+- Power: W; total generation includes scaled solar and radioisotope output
+- Available power: total generation minus component power use; must be >= 0 W
+- Battery: Wh
+- Propellant: kg; these are simplified game reserves, not calculated fuel needs
+- Reliability: rounded average component reliability, percent
+- Every listed required system category must be installed.
+- A component ID can be installed only once.
+- Solar output scales by the inverse square of Sun distance. Radioisotope
+  output is held at its nominal game value.
+
+VALIDATION PIPELINE
+
+    component selection
+            |
+            v
+    +------------------+       fail       +------------------+
+    | required systems | ----------------> | show exact issue |
+    +--------+---------+                  | revise the build |
+             | pass                       +------------------+
+             v
+    +------------------+
+    | mass / cost      |
+    | power / battery  |
+    | propellant       |
+    | reliability      |
+    +--------+---------+
+             | pass
+             v
+    +------------------+
+    | destination and  |
+    | path compatible  |
+    +--------+---------+
+             | pass
+             v
+    +------------------+
+    | LAUNCH UNLOCKED  |
+    +------------------+
+
+The interface keeps the launch action locked until the checks pass. This
+turns failure into feedback: the player knows which engineering decision to
+change instead of receiving an unexplained rejection.
+
+PLANET / MISSION PATH MATRIX
+Earth: Paths 01-02
+Moon: Paths 03-04
+Mercury: Path 05
+Venus: Path 05
+Mars: Path 05
+Jupiter: Path 07
+Saturn: Path 07
+Uranus: Path 08
+Neptune: Path 08
+
+Path 06 is an asteroid mission. Path 09 is interstellar. Neither is offered
+as a planet destination.
+
+ACCEPTANCE CHECKS
+For each path below, the build must satisfy all of these:
+1. Mass is no greater than the listed maximum.
+2. Cost is no greater than the listed game-credit budget.
+3. Total power generation is at least the listed minimum, and available power
+   is nonnegative.
+4. Battery capacity is at least the listed minimum.
+5. Propellant is at least the listed game reserve.
+6. Average reliability is at least the listed minimum.
+7. All required system categories are installed.
+
+EARTH
+Environment: gravity 9.8 m/s^2; atmosphere about 1 bar; sunlight 100% of the
+1-AU reference. These are Earth-orbit missions; Earth surface launch-vehicle
+sizing is not modeled.
+
+LEVEL 01 - EARTH OBSERVATION SATELLITE
+Acceptance: mass <= 500 kg; cost <= 2,000,000 credits; power >= 120 W;
+battery >= 0 Wh; propellant >= 0 kg; reliability >= 80%.
+Valid-build ranges: mass 323-500 kg; cost 103,000-420,000 credits;
+power generation 180-816 W; available power 0-739 W; battery 0-860 Wh;
+propellant 0-620 kg; reliability 88-92%.
+Valid component combinations found: 330.
+
+LEVEL 02 - WEATHER MONITORING SATELLITE
+Acceptance: mass <= 850 kg; cost <= 3,500,000 credits; power >= 150 W;
+battery >= 240 Wh; propellant >= 0 kg; reliability >= 82%.
+Valid-build ranges: mass 333-850 kg; cost 90,000-608,000 credits;
+power generation 180-974 W; available power 0-930 W; battery 240-860 Wh;
+propellant 0-620 kg; reliability 86-92%.
+Valid component combinations found: 12,960.
+
+MOON
+Environment: mean distance 384,400 km from Earth; gravity 1.6 m/s^2;
+tenuous exosphere; sunlight modeled at 100% of the 1-AU reference. Lunar
+phase cycle is approximately 29.5 days. Surface landing and ascent are not
+simulated.
+
+LEVEL 03 - LUNAR COMMUNICATION SATELLITE
+Acceptance: mass <= 1,250 kg; cost <= 5,000,000 credits; power >= 150 W;
+battery >= 240 Wh; propellant >= 100 kg; reliability >= 82%.
+Valid-build ranges: mass 477-1,241 kg; cost 159,000-655,000 credits;
+power generation 180-974 W; available power 0-893 W; battery 240-860 Wh;
+propellant 620 kg; reliability 87-92%.
+Valid component combinations found: 4,976.
+
+LEVEL 04 - MOON EXPLORATION PROBE
+Acceptance: mass <= 1,800 kg; cost <= 8,500,000 credits; power >= 180 W;
+battery >= 240 Wh; propellant >= 150 kg; reliability >= 84%.
+Valid-build ranges: mass 509-1,255 kg; cost 177,000-662,000 credits;
+power generation 180-974 W; available power 0-872 W; battery 240-860 Wh;
+propellant 620 kg; reliability 87-92%.
+Valid component combinations found: 2,469.
+
+MERCURY
+Environment: mean distance 57.9 million km from the Sun; gravity 3.7 m/s^2;
+near vacuum / tenuous exosphere; sunlight about 668% of the 1-AU reference.
+Approximate Earth-planet alignment cycle: 116 days.
+
+LEVEL 05 - INNER PLANET ORBITER
+Acceptance: mass <= 2,500 kg; cost <= 15,000,000 credits; power >= 150 W;
+battery >= 240 Wh; propellant >= 250 kg; reliability >= 84%.
+Valid-build ranges: mass 505-1,255 kg; cost 175,000-662,000 credits;
+power generation 1,202-3,812 W; available power 941-3,709 W;
+battery 240-860 Wh; propellant 620 kg; reliability 88-92%.
+Valid component combinations found: 2,592.
+Profile: orbiter or flyby; surface operations need a separate design.
+
+VENUS
+Environment: mean distance 108.2 million km from the Sun; gravity 8.9 m/s^2;
+carbon-dioxide atmosphere about 92 bar; sunlight about 191% of the 1-AU
+reference. Approximate Earth-planet alignment cycle: 584 days.
+
+LEVEL 05 - INNER PLANET ORBITER
+Acceptance: mass <= 2,500 kg; cost <= 15,000,000 credits; power >= 150 W;
+battery >= 240 Wh; propellant >= 250 kg; reliability >= 84%.
+Valid-build ranges: mass 505-1,255 kg; cost 175,000-662,000 credits;
+power generation 344-1,431 W; available power 83-1,328 W;
+battery 240-860 Wh; propellant 620 kg; reliability 88-92%.
+Valid component combinations found: 2,592.
+Profile: orbiter or flyby; the hot, high-pressure surface needs a dedicated
+lander design.
+
+MARS
+Environment: mean distance 227.9 million km from the Sun; gravity 3.7 m/s^2;
+carbon-dioxide atmosphere about 0.01 bar; sunlight about 43.1% of the 1-AU
+reference. Approximate Earth-planet alignment cycle: 780 days.
+
+LEVEL 05 - INNER PLANET ORBITER
+Acceptance: mass <= 2,500 kg; cost <= 15,000,000 credits; power >= 150 W;
+battery >= 240 Wh; propellant >= 250 kg; reliability >= 84%.
+Valid-build ranges: mass 545-1,255 kg; cost 210,000-662,000 credits;
+power generation 215-689 W; available power 0-586 W; battery 240-860 Wh;
+propellant 620 kg; reliability 88-92%.
+Valid component combinations found: 2,070.
+Profile: orbiter; entry, landing, and surface ascent are not simulated.
+
+JUPITER
+Environment: mean distance 778.6 million km from the Sun; gravity 23.1 m/s^2
+at the 1-bar reference level; hydrogen / helium atmosphere, no solid surface;
+sunlight about 3.70% of the 1-AU reference. Approximate Earth-planet alignment
+cycle: 399 days.
+
+LEVEL 07 - OUTER PLANET SURVEY
+Acceptance: mass <= 4,000 kg; cost <= 40,000,000 credits; power >= 150 W;
+battery >= 240 Wh; propellant >= 350 kg; reliability >= 88%.
+Valid-build ranges: mass 523-1,255 kg; cost 273,000-662,000 credits;
+power generation 165-492 W; available power 1-389 W; battery 240-860 Wh;
+propellant 500-620 kg; reliability 88-92%.
+Valid component combinations found: 1,518.
+Profile: flyby, orbiter, or atmospheric science; no solid-surface mission.
+
+SATURN
+Environment: mean distance 1.43 billion km from the Sun; gravity 9.0 m/s^2
+at the 1-bar reference level; hydrogen / helium atmosphere, no solid surface;
+sunlight about 1.09% of the 1-AU reference. Approximate Earth-planet alignment
+cycle: 378 days.
+
+LEVEL 07 - OUTER PLANET SURVEY
+Acceptance: mass <= 4,000 kg; cost <= 40,000,000 credits; power >= 150 W;
+battery >= 240 Wh; propellant >= 350 kg; reliability >= 88%.
+Valid-build ranges: mass 523-1,255 kg; cost 273,000-662,000 credits;
+power generation 160-479 W; available power 0-376 W; battery 240-860 Wh;
+propellant 500-620 kg; reliability 88-92%.
+Valid component combinations found: 1,464.
+Profile: flyby, orbiter, or atmospheric science; no solid-surface mission.
+
+URANUS
+Environment: mean distance 2.87 billion km from the Sun; gravity 8.7 m/s^2
+at the 1-bar reference level; hydrogen / helium / methane atmosphere, no solid
+surface; sunlight about 0.272% of the 1-AU reference. Approximate Earth-planet
+alignment cycle: 370 days.
+
+LEVEL 08 - ICE GIANT DEEP-SPACE PROBE
+Acceptance: mass <= 5,000 kg; cost <= 65,000,000 credits; power >= 300 W;
+battery >= 620 Wh; propellant >= 450 kg; reliability >= 90%.
+Valid-build ranges: mass 721-1,255 kg; cost 454,000-662,000 credits;
+power generation 316-475 W; available power 55-271 W; battery 620-860 Wh;
+propellant 620 kg; reliability 90-91%.
+Valid component combinations found: 96.
+Profile: flyby, orbiter, or atmospheric science; no solid-surface mission.
+
+NEPTUNE
+Environment: mean distance 4.50 billion km from the Sun; gravity 11.0 m/s^2
+at the 1-bar reference level; hydrogen / helium / methane atmosphere, no solid
+surface; sunlight about 0.110% of the 1-AU reference. Approximate Earth-planet
+alignment cycle: 367 days.
+
+LEVEL 08 - ICE GIANT DEEP-SPACE PROBE
+Acceptance: mass <= 5,000 kg; cost <= 65,000,000 credits; power >= 300 W;
+battery >= 620 Wh; propellant >= 450 kg; reliability >= 90%.
+Valid-build ranges: mass 721-1,255 kg; cost 454,000-662,000 credits;
+power generation 316-475 W; available power 55-271 W; battery 620-860 Wh;
+propellant 620 kg; reliability 90-91%.
+Valid component combinations found: 96.
+Profile: flyby, orbiter, or atmospheric science; no solid-surface mission.
+
+SCORING EXPLANATION DIAGRAM
+
+    +----------------------------+
+    | MISSION OUTCOME            | 30 points
+    | objective achieved         |
+    +----------------------------+
+    | ENGINEERING DECISIONS      | 25 points
+    | mass, power, configuration  |
+    +----------------------------+
+    | RESOURCE EFFICIENCY        | 20 points
+    | budget, propellant, data   |
+    +----------------------------+
+    | COMMUNICATION PERFORMANCE  | 15 points
+    | successful data return      |
+    +----------------------------+
+    | MISSION LIFETIME           | 10 points
+    | days and system endurance  |
+    +----------------------------+
+                    |
+                    v
+             FINAL SCORE / 100
+                    |
+                    v
+       awards + deductions + next steps
+
+The score is calculated from the actual simulation result and the selected
+configuration. It is not a random end-screen number. The report shows the
+category total, the maximum weight, the percentage, and the reason for each
+award or deduction.
+
+MISSION SIMULATION STAGES
+
+    [01 LAUNCH]
+          |
+          v
+    [02 DEPLOYMENT] ---> systems check
+          |
+          v
+    [03 TRANSFER] -----> route and resource state
+          |
+          v
+    [04 SCIENCE] ------> objective progress
+          |
+          v
+    [05 COMMUNICATION] -> data return and link state
+          |
+          v
+    [06 COMPLETE] -----> report, score, archive
+
+At selected stages, a mission event can require a decision. A player may
+protect reliability, preserve resources, or accept risk for greater science
+return. The result is recorded in the mission report.
+
+REPORT EVIDENCE MODEL
+
+    CONFIGURATION                 SIMULATION
+    - destination                 - stage outcomes
+    - mission path                - resource changes
+    - components                  - event choices
+    - rocket and orbit            - data returned
+              \                     /
+               \                   /
+                v                 v
+              +---------------------+
+              | MISSION REPORT      |
+              | charts + scorecard  |
+              | margins + reasons   |
+              +---------------------+
+
+This makes the report useful to a judge or educator: it connects what the
+player chose to what happened, then states what could be improved.
+
+DATA AND SOURCE PROVENANCE
+
+    NASA planetary references
+              |
+              v
+    destination facts + imagery
+              |
+              v
+    game rules and educational abstractions
+              |
+              v
+    selectable path + spacecraft constraints
+              |
+              v
+    measured simulation outcome + report
+
+Measured facts are kept separate from game assumptions. Planetary gravity,
+atmosphere, distance, orbital period, and imagery provide context. Credits,
+component values, propellant reserves, launch staging, and trajectories are
+explicitly simplified for learning.
+
+MODEL LIMITS
+These are game-design acceptance ranges, not certified spacecraft limits.
+All missions are modeled as Earth departures. The game does not calculate
+ephemerides, actual launch dates, transfer trajectories, delta-v, surface
+landing, or Earth launch-vehicle performance. The alignment cycles are
+approximate orbital alignment periods, not launch windows. Propellant values
+are game reserves and must not be used as real mission fuel estimates.
+
+NASA REFERENCES
+Planetary Fact Sheet (gravity, atmosphere, orbital periods, mean solar distance):
+https://nssdc.gsfc.nasa.gov/planetary/factsheet/
+Moon Facts:
+https://science.nasa.gov/moon/facts/
+Radioisotope Power Systems:
+https://science.nasa.gov/planetary-science/programs/radioisotope-power-systems/
+Small Spacecraft Thermal Control:
+https://www.nasa.gov/smallsat-institute/sst-soa/thermal-control/
+
+DESIGN AND MISSION-EDUCATION REFERENCES
+Design and Develop Science Missions:
+https://www.nasa.gov/wp-content/uploads/2025/04/250323-design-and-develop-science-mission.pdf
+CubeSat 101:
+https://www3.nasa.gov/sites/default/files/atoms/files/nasa_csli_cubesat_101_508.pdf
+NASA Mission Viz:
+https://github.com/nasa/mission-viz
+Build It Yourself: Satellite!:
+https://science.nasa.gov/mission/webb/game-build-it-yourself/
+NASA 3D Resources:
+https://github.com/nasa/NASA-3D-Resources
+
+HACKATHON DEMO SCRIPT
+Use this sequence for a short judge presentation:
+
+00:00  Start on About and state the one-line promise:
+       "Every number is a decision, and every result is explainable."
+00:20  Select Mars or Moon and point to the measured facts and path filter.
+00:45  Add or remove a spacecraft component and show the resource bars change.
+01:10  Select an invalid combination and show the exact readiness warning.
+01:35  Correct the design and open Mission Control.
+01:55  Run the launch sequence and explain that it is intentionally schematic.
+02:20  Resolve one mission event by choosing between safety and science.
+02:45  Open the report and show the telemetry graph, scorecard, and reasons.
+03:10  End with the educational limitation and the NASA reference panel.
+
+JUDGE TAKEAWAYS
+- IMPACT: makes systems engineering understandable in one short browser run.
+- CREATIVITY: the destination, path, spacecraft, launch, and report form one
+  connected learning loop.
+- VALIDITY: source links are visible and game abstractions are labelled.
+- RELEVANCE: covers objectives, payload, mass, power, communications, cost,
+  launch, mission lifetime, and scientific return.
+- PRESENTATION: strong visual language, animated launch, 3D integration,
+  responsive UI, charts, and an exportable mission record.
+
+SUBMISSION HONESTY CHECK
+Do not present the game values as real launch performance. Say:
+"NASA resources inform the vocabulary, facts, imagery, and educational
+structure. The playable costs, ranges, trajectories, and propulsion values
+are simplified assumptions designed to teach trade-offs."

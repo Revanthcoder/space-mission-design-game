@@ -1,9 +1,14 @@
 import { INSTRUMENTS, OBJECTIVES, ROCKETS } from "../data/missionCatalog.js";
 
 export function createMissionDesignFromBuilder(builderDesign) {
-  const objectiveId = builderDesign.destinationId === "mars"
-    ? "mars-weather"
-    : "earth-observation";
+  const destinationId = builderDesign.destinationId || "earth";
+  const objectiveId = destinationId === "earth"
+    ? "earth-observation"
+    : destinationId === "moon"
+      ? "lunar-survey"
+      : destinationId === "mars"
+        ? "mars-weather"
+        : "planetary-survey";
   const objective = OBJECTIVES.find((item) => item.id === objectiveId);
   const instrumentIds = objective.recommendedInstrumentIds;
   const instrumentMassKg = instrumentIds.reduce((total, id) => {
@@ -30,5 +35,7 @@ export function createMissionDesignFromBuilder(builderDesign) {
     busMassKg,
     powerGenerationW: Math.min(300, Math.max(40, builderDesign.powerGenerationW)),
     budgetCredits: Math.min(220, Math.max(40, Math.ceil(builderDesign.totalCost / 500))),
+    destinationId,
+    destinationName: builderDesign.destinationName,
   };
 }

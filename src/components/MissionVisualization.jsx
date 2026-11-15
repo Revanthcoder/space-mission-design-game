@@ -11,8 +11,10 @@ export default function MissionVisualization({ orbit, progress, objective }) {
     return <MissionVisualizationFallback orbit={orbit} progress={progress} objective={objective} />;
   }
 
-  const isTransfer = orbit?.path === "moon" || orbit?.path === "mars";
-  const destination = orbit?.path === "mars" ? "Mars" : orbit?.path === "moon" ? "Moon" : "Earth";
+  const isTransfer = orbit?.path === "moon" || orbit?.path === "mars" || orbit?.path === "planetary";
+  const destination = orbit?.path === "planetary"
+    ? orbit.destinationName || "Selected planet"
+    : orbit?.path === "mars" ? "Mars" : orbit?.path === "moon" ? "Moon" : "Earth";
   const sceneDescription = isTransfer
     ? `Illustrative Earth to ${destination} transfer`
     : `${orbit?.name || "Selected orbit"} around Earth`;
